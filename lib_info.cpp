@@ -42,7 +42,6 @@ class Artist {
 		string name;
 		int num_songs;
 };
-
 //////////
 
 // Helper Functions
@@ -92,6 +91,31 @@ string sec_to_time(int time){
 	s_time = sout.str();
 
 	return s_time;
+}
+
+void dealloc(map <string, Artist*> &Artists){
+	map <string, Artist*>::iterator art_mip;
+	map <string, Album*>::iterator alb_mip;
+	map <int, Song*>::iterator song_mip;
+
+	for (art_mip = Artists.begin(); art_mip != Artists.end(); art_mip++){
+			for (alb_mip = art_mip->second->Albums.begin(); alb_mip != art_mip->second->Albums.end(); alb_mip++){
+					for (song_mip = alb_mip->second->Songs.begin(); song_mip != alb_mip->second->Songs.end(); song_mip++)
+							 delete song_mip->second;
+			}
+
+	}
+
+	for (art_mip = Artists.begin(); art_mip != Artists.end(); art_mip++){
+			for (alb_mip = art_mip->second->Albums.begin(); alb_mip != art_mip->second->Albums.end(); alb_mip++){
+				delete alb_mip->second;
+			}
+	}
+
+	for (art_mip = Artists.begin(); art_mip != Artists.end(); art_mip++){
+		delete art_mip->second;
+	}
+
 }
 //////////
 
@@ -192,6 +216,7 @@ int main(int argc, char** argv){
 		}
 	 }
 
+	dealloc(Artists);
 	fin.close();
 	return 0;
 }
